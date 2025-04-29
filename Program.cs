@@ -1,95 +1,97 @@
 ﻿using System;
+using System.Linq;
 
-class exec
+class Program
 {
     static void Main()
     {
-        double saldo = 1000;
-        while (true) 
+        double balance = 1000;
+        while (true)
         {
-            Console.Write("Caixa Eletrônico. \n1- Ver Saldo\n2- Depositar\n3- Sacar\n4- Sair\n-> ");
-            string[] ver = { "ver saldo", "saldo", "ver", "1" };
-            string[] depositar = { "depositar", "2", "depósito", "deposito" };
-            string[] sacar = { "sacar", "saque", "3" };
-            string[] sair = { "sair", "4", "saída", "saida" };
-            string[] opcoes = ver.Concat(depositar).Concat(sacar).Concat(sair).ToArray();
+            Console.Write("ATM Menu. \n1- View Balance\n2- Deposit\n3- Withdraw\n4- Exit\n-> ");
+            string[] view = { "view balance", "balance", "view", "1" };
+            string[] deposit = { "deposit", "2" };
+            string[] withdraw = { "withdraw", "3" };
+            string[] exit = { "exit", "4" };
+            string[] options = view.Concat(deposit).Concat(withdraw).Concat(exit).ToArray();
 
-            string escolha = Console.ReadLine().Trim().ToLower();
-            if (opcoes.Contains(escolha))
+            string choice = Console.ReadLine().Trim().ToLower();
+            if (options.Contains(choice))
             {
-                if (ver.Contains(escolha))
+                if (view.Contains(choice))
                 {
-                    Console.WriteLine($"Saldo: R$ {saldo}.\n");
+                    Console.WriteLine($"Balance: ${balance}.\n");
                 }
-                else if (depositar.Contains(escolha))
+                else if (deposit.Contains(choice))
                 {
-                    Console.Write("Digite o valor que você quer depositar: ");
-                    double dep;
-                    if (double.TryParse(Console.ReadLine(), out dep))
+                    Console.Write("Enter the amount you want to deposit: ");
+                    double amount;
+                    if (double.TryParse(Console.ReadLine(), out amount))
                     {
-                        saldo += dep;
-                        Console.WriteLine($"R$ {dep} foi depositado no seu saldo.\n");
+                        balance += amount;
+                        Console.WriteLine($"${amount} was deposited to your balance.\n");
                     }
                     else
                     {
-                        Console.Write("Um erro ocorreu. O valor que você inseriu não é um número. Tentar novamente? Digite Y para sim: ");
-                        string resp = Console.ReadLine().Trim().ToLower();
-                        if (resp != "y")
+                        if (!TryAgain())
                         {
-                            Console.WriteLine("Obrigado por utilizar.");
                             break;
                         }
+                        continue;
                     }
                 }
-                else if (sacar.Contains(escolha))
+                else if (withdraw.Contains(choice))
                 {
-                    Console.Write("Digite o valor que você quer sacar: ");
-                    double saque;
-                    if (double.TryParse(Console.ReadLine(),out saque))
+                    Console.Write("Enter the amount you want to withdraw: ");
+                    double amount;
+                    if (double.TryParse(Console.ReadLine(), out amount))
                     {
-                        if (saldo>=saque)
+                        if (balance >= amount)
                         {
-                            saldo -= saque;
-                            Console.WriteLine($"R$ {saque} foi sacado do seu saldo.\n");
+                            balance -= amount;
+                            Console.WriteLine($"${amount} was withdrawn from your balance.\n");
                         }
                         else
                         {
-                            Console.Write("Um erro ocorreu. O valor do seu saque é maior do que o valor dísponivel na conta. Tentar novamente? Digite Y para sim: ");
-                            string resp = Console.ReadLine().Trim().ToLower();
-                            if (resp != "y")
+                            Console.WriteLine("Insufficient balance.");
+                            if (!TryAgain())
                             {
-                                Console.WriteLine("Obrigado por utilizar.");
                                 break;
                             }
+                            continue;
                         }
                     }
                     else
                     {
-                        Console.Write("Um erro ocorreu. O valor que você inseriu não é um número. Tentar novamente? Digite Y para sim: ");
-                        string resp = Console.ReadLine().Trim().ToLower();
-                        if (resp != "y")
+                        if (!TryAgain())
                         {
-                            Console.WriteLine("Obrigado por utilizar.");
                             break;
                         }
+                        continue;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Obrigado por utilizar.");
+                    Console.WriteLine("Thank you for using our service.");
                     break;
                 }
             }
             else
             {
-                Console.Write("Um erro ocorreu. Digite alguma das opções. Tentar novamente? Digite Y para sim: ");
+                Console.Write("An error occurred. Please choose one of the options. Try again? Type Y for yes: ");
                 string resp = Console.ReadLine().Trim().ToLower();
-                if (resp!="y")
+                if (resp != "y")
                 {
-                    Console.WriteLine("Obrigado por utilizar.");
+                    Console.WriteLine("Thank you for using our service.");
                     break;
                 }
             }
+        }
+
+        static bool TryAgain()
+        {
+            Console.Write("An error occurred. Try again? (Type Y for yes): ");
+            return Console.ReadLine().Trim().ToLower() == "y";
         }
     }
 }
